@@ -1,0 +1,24 @@
+# SQLite 数据库文件：每次运行都变，且是二进制，绝不该进版本库
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# 编译产物
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 环境变量与密钥（后面把 SECRET_KEY 挪到环境变量时会用到）
+.env
+.env.local
+
+# 编辑器和 IDE
+.idea/
+.vscode/
+*.swp
+
+# 系统垃圾
+Thumbs.db
+.DS_Store
