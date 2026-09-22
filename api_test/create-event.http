@@ -1,9 +1,11 @@
 POST http://localhost:8090/events
+# 用前把 <token> 换成 /login 返回的 token，勿提交真实值
 content-type:application/json
-authorization: 
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZXhhbXBsZTMuY29tIiwiZXhwIjoxNzkwMDg2MDY5LCJ1c2VySWQiOjR9.7hJ5CpjBuNGuE0bdudOl51bIvIcd3oNjD5umWfURH5o
+
 {
     "name": "New Event",
-    "description": "This is a new event",
+    "description": "This is a new test event",
     "location": "New Location",
-    "dateTime": "2023-04-01T12:00:00Z"
+    "dateTime": "2026-09-21T12:00:00Z"
 }

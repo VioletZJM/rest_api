@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"strings"
 
 	"example.com/rest_api/utils"
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,18 @@ import (
 
 func Authenticate(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		return
+	}
+
+	authHeader, ok := strings.CutPrefix(token, "Bearer ")
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		return
+	}
+
+	token = strings.TrimSpace(authHeader)
 	if token == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
 		return
