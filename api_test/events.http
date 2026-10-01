@@ -36,16 +36,12 @@ authorization:Bearer {{login.response.body.$.token}}
 
 ### 删除事件
 DELETE {{baseUrl}}/events/1
-content-type:application/json
 authorization:Bearer {{login.response.body.$.token}}
 
 ### 查询事件
 GET {{baseUrl}}/events
-content-type:application/json
 authorization:Bearer {{login.response.body.$.token}}
 
 ### 通过事件id查询单个事件
 GET {{baseUrl}}/events/1
-
-content-type:application/json
 authorization:Bearer {{login.response.body.$.token}}
