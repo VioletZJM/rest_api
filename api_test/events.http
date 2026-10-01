@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:8090
+
+### 登录并获取token
+# @name login
+POST {{baseUrl}}/login
+content-type:application/json
+
+{
+    "email": "test@example.com",
+    "password": "he123"
+}
+
+### 创建事件
+POST {{baseUrl}}/events
+content-type:application/json
+authorization:Bearer {{login.response.body.$.token}}
+
+{
+    "name": "New Event",
+    "description": "This is a new test event",
+    "location": "New Location",
+    "dateTime": "2026-09-21T12:00:00Z"
+}
+
+### 更新事件
+PUT {{baseUrl}}/events/1
+content-type:application/json
+authorization:Bearer {{login.response.body.$.token}}
+
+{
+    "name": "Update 3 Event",
+    "description": "This is a update event",
+    "location": "Update Location",
+    "dateTime": "2023-04-01T12:00:00Z"
+}
+
+### 删除事件
+DELETE {{baseUrl}}/events/1
+content-type:application/json
+authorization:Bearer {{login.response.body.$.token}}
+
+### 查询事件
+GET {{baseUrl}}/events
+content-type:application/json
+authorization:Bearer {{login.response.body.$.token}}
+
+### 通过事件id查询单个事件
+GET {{baseUrl}}/events/1
+
+content-type:application/json
+authorization:Bearer {{login.response.body.$.token}}
