@@ -1,5 +1,0 @@
-GET http://localhost:8090/events/2
-# 用前把 <token> 换成 /login 返回的 token，勿提交真实值
-content-type:application/json
-authorization:Bearer <token>
-
