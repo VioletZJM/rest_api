@@ -10,13 +10,11 @@ import (
 )
 
 func main() {
-	database.InitDB()
-
 	err := utils.LoadJWTSecret()
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	database.InitDB()
 	server := gin.Default()
 	routes.RegisterRoutes(server)
 	server.Run(":8090") //localhost:8090
