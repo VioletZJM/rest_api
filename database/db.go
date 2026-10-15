@@ -66,4 +66,10 @@ func createTables() {
 		panic("Could not create registrations table." + err.Error())
 	}
 
+	createUniqueIndex := `CREATE UNIQUE INDEX IF NOT EXISTS idx_registration_event_user ON registrations(event_id, user_id)`
+
+	_, err = DB.Exec(createUniqueIndex)
+	if err != nil {
+		panic("Could not create unique index." + err.Error())
+	}
 }
