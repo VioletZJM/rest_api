@@ -169,3 +169,34 @@ func GetRegistrationsForUser(userId int64) ([]Event, error) {
 	return events, nil
 
 }
+
+type Attendee struct {
+	ID    int64
+	Email string
+}
+
+func GetAttendees(eventId int64) ([]Attendee, error) {
+	query := "SELECT u.id, u.email FROM users u JOIN registrations r ON u.id = r.user_id WHERE r.event_id = ?"
+	rows, err := database.DB.Query(query, eventId)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var attendees []Attendee
+
+	for rows.Next() {
+		var attendee Attendee
+		err := rows.Scan(&attendee.ID, &attendee.Email)
+		if err != nil {
+			return nil, err
+		}
+		attendees = append(attendees, attendee)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return attendees, nil
+}
