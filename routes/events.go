@@ -131,3 +131,25 @@ func getMyRegistrations(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, registrations)
 }
+
+func getAttendees(c *gin.Context) {
+	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get id."})
+		return
+	}
+
+	_, err = models.GetEventByID(eventId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
+		return
+	}
+
+	attendees, err := models.GetAttendees(eventId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the attendees."})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendees)
+}
