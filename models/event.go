@@ -116,8 +116,9 @@ func (e *Event) Register(userId int64) error {
 		return err
 	}
 
+	var ErrAlreadyRegistered = errors.New("user already registered for this event")
 	if IsRegistered {
-		return errors.New("user already registered for this event")
+		return ErrAlreadyRegistered
 	}
 
 	query := "INSERT INTO registrations (event_id,user_id) VALUES (?,?)"
