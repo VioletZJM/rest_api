@@ -1,6 +1,8 @@
 package models
 
 import (
+	"database/sql"
+	"errors"
 	"time"
 
 	"example.com/rest_api/database"
@@ -199,4 +201,21 @@ func GetAttendees(eventId int64) ([]Attendee, error) {
 		return nil, err
 	}
 	return attendees, nil
+}
+
+func IsUserRegistered(eventId, userId int64) (bool, error) {
+	query := "SELECT COUNT(*) FROM registrations WHERE event_id = ? AND user_id = ?"
+	row := database.DB.QueryRow(query, eventId, userId)
+
+	var count int
+	err := row.Scan(&count)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
