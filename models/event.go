@@ -111,6 +111,15 @@ func (e *Event) Delete() error {
 }
 
 func (e *Event) Register(userId int64) error {
+	IsRegistered, err := IsUserRegistered(e.ID, userId)
+	if err != nil {
+		return err
+	}
+
+	if IsRegistered {
+		return errors.New("user already registered for this event")
+	}
+
 	query := "INSERT INTO registrations (event_id,user_id) VALUES (?,?)"
 	stmt, err := database.DB.Prepare(query)
 	if err != nil {
