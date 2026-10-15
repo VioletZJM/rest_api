@@ -131,6 +131,6 @@ func (e *Event) CanceRegistration(userId int64) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(e.ID) //传id值给删除函数
+	_, err = stmt.Exec(e.ID, userId) //传id值给删除函数
 	return err
 }
