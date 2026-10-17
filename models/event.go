@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"errors"
 	"time"
 
@@ -220,12 +219,8 @@ func IsUserRegistered(eventId, userId int64) (bool, error) {
 	var count int
 	err := row.Scan(&count)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		return false, nil
-	}
-
 	if err != nil {
 		return false, err
 	}
-	return true, nil
+	return count > 0, nil
 }
