@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -13,19 +14,28 @@ func registerForEvent(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get event_id."})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get event_id."})
+		return
+	}
+
+	_, err = models.IsUserRegistered(eventId, userId)
+	if errors.Is(err, models.ErrAlreadyRegistered) {
+		c.JSON(http.StatusConflict, gin.H{"message": "User already registered for this event."})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not register user for event."})
 		return
 	}
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not fetch event."})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch event."})
 		return
 	}
 
 	err = event.Register(userId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not regisetr user for event."})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not register user for event."})
 		return
 	}
 
@@ -37,7 +47,7 @@ func canceRegistration(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get event_id."})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get event_id."})
 		return
 	}
 
@@ -46,7 +56,7 @@ func canceRegistration(c *gin.Context) {
 
 	err = event.CanceRegistration(userId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not cance regisetration."})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not cancel registration."})
 		return
 	}
 

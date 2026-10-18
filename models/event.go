@@ -16,6 +16,8 @@ type Event struct {
 	UserID      int64
 }
 
+var ErrAlreadyRegistered = errors.New("user already registered for this event")
+
 func (e *Event) Save() error {
 	//稍后，保存到数据库中
 	query := `
@@ -115,7 +117,6 @@ func (e *Event) Register(userId int64) error {
 		return err
 	}
 
-	var ErrAlreadyRegistered = errors.New("user already registered for this event")
 	if IsRegistered {
 		return ErrAlreadyRegistered
 	}
