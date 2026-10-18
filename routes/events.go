@@ -126,7 +126,7 @@ func deleteEvent(c *gin.Context) {
 func getMyRegistrations(c *gin.Context) {
 	registrations, err := models.GetRegistrationsForUser(c.GetInt64("userId"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch registrations.Try again."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch registrations.Try again."})
 		return
 	}
 	c.JSON(http.StatusOK, registrations)
