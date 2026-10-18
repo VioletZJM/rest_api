@@ -44,14 +44,14 @@ func (u *User) ValidateCredentials() error {
 	query := "SELECT id,password FROM users WHERE email = ?"
 	row := database.DB.QueryRow(query, u.Email)
 
-	var retrievedPasswprd string
+	var retrievedPassword string
 
-	err := row.Scan(&u.ID, &retrievedPasswprd)
+	err := row.Scan(&u.ID, &retrievedPassword)
 	if err != nil {
 		return errors.New("Credentials invalid")
 	}
 
-	passwordIsValid := utils.CheckPasswordHash(u.Password, retrievedPasswprd)
+	passwordIsValid := utils.CheckPasswordHash(u.Password, retrievedPassword)
 	if !passwordIsValid {
 		return errors.New("Credentials invalid")
 	}

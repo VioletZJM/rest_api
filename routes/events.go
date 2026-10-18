@@ -41,13 +41,13 @@ func createEvent(c *gin.Context) {
 func getEvent(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get id."})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get id."})
 		return
 	}
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch the event."})
 		return
 	}
 
@@ -58,7 +58,7 @@ func getEvent(c *gin.Context) {
 func updateEvent(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get id."})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get id."})
 		return
 	}
 
@@ -66,7 +66,7 @@ func updateEvent(c *gin.Context) {
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch the event."})
 		return
 	}
 
@@ -85,18 +85,18 @@ func updateEvent(c *gin.Context) {
 	updateEvent.ID = eventId
 	err = updateEvent.Update()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not update the event."})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not update the event."})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Event updated succseefully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Event updated successfully"})
 
 }
 
 func deleteEvent(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get id."})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get id."})
 		return
 	}
 
@@ -104,7 +104,7 @@ func deleteEvent(c *gin.Context) {
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch the event."})
 		return
 	}
 
@@ -115,11 +115,11 @@ func deleteEvent(c *gin.Context) {
 
 	err = event.Delete()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not delete the event."})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not delete the event."})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Event deleted succseefully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Event deleted successfully"})
 
 }
 
@@ -135,19 +135,19 @@ func getMyRegistrations(c *gin.Context) {
 func getAttendees(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Cloud not get id."})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get id."})
 		return
 	}
 
 	_, err = models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch the event."})
 		return
 	}
 
 	attendees, err := models.GetAttendees(eventId)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the attendees."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch the attendees."})
 		return
 	}
 
