@@ -6,7 +6,7 @@
 
 ## 技术栈
 
-Go 1.26+、Gin、SQLite（`github.com/mattn/go-sqlite3`，**需要 CGO**）、JWT、bcrypt。
+Go 1.26.5+、Gin、SQLite（`github.com/mattn/go-sqlite3`，**需要 CGO**）、JWT、bcrypt。
 
 ## 快速开始
 
@@ -65,5 +65,5 @@ JWT_SECRET=ci-test-secret go test ./...
 
 - 事件对象字段：`ID`、`Name`、`Description`、`Location`、`DateTime`、`UserID`。
 - `dateTime` 使用 RFC3339，如 `2026-09-21T12:00:00Z`。
-- 错误统一返回 `{"message": "..."}`：400 参数错误、401 未认证/非创建者、409 重复报名、500 服务端错误（含事件不存在）。
+- 错误以 `{"message": "..."}` 返回（请求体绑定失败时为 `{"error": "..."}`）：400 参数错误、401 未认证/非创建者、404 事件不存在、409 重复报名、500 其他服务端错误。
 - Token 有效期 2 小时。
