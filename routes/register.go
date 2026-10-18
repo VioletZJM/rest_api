@@ -18,16 +18,6 @@ func registerForEvent(c *gin.Context) {
 		return
 	}
 
-	registered, err := models.IsUserRegistered(eventId, userId)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not register user for event."})
-		return
-	}
-	if registered {
-		c.JSON(http.StatusConflict, gin.H{"message": "User already registered for this event."})
-		return
-	}
-
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch event."})
