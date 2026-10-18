@@ -1,7 +1,7 @@
 ![ci](https://github.com/VioletZJM/rest_api/actions/workflows/ci.yml/badge.svg)
 
 # REST API
-
+本项目基于开源Go REST API教学项目搭建
 基于 Gin + SQLite 的事件管理 API：用户注册/登录（JWT）、事件 CRUD、活动报名。
 
 ## 技术栈
