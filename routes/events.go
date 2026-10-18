@@ -11,7 +11,7 @@ import (
 func getEvents(c *gin.Context) {
 	events, err := models.GetAllEvents()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch events.Try again."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not fetch events.Try again."})
 		return
 	}
 	c.JSON(http.StatusOK, events)
@@ -47,7 +47,7 @@ func getEvent(c *gin.Context) {
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
 		return
 	}
 
@@ -66,7 +66,7 @@ func updateEvent(c *gin.Context) {
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
 		return
 	}
 
@@ -104,7 +104,7 @@ func deleteEvent(c *gin.Context) {
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Cloud not fetch the event."})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Cloud not fetch the event."})
 		return
 	}
 
