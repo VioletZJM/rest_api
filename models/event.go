@@ -160,7 +160,7 @@ func GetRegistrationsForUser(userId int64) ([]Event, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var events []Event
+	events := []Event{}
 
 	for rows.Next() {
 		var event Event
@@ -196,7 +196,7 @@ func GetAttendees(eventId int64) ([]Attendee, error) {
 	}
 	defer rows.Close()
 
-	var attendees []Attendee
+	attendees := []Attendee{}
 
 	for rows.Next() {
 		var attendee Attendee

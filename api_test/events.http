@@ -10,7 +10,8 @@ content-type:application/json
     "password": "he123"
 }
 
-### 创建事件
+### 创建事件（# @name 让后续请求能直接引用新建事件的 id）
+# @name createEvent
 POST {{baseUrl}}/events
 content-type:application/json
 authorization:Bearer {{login.response.body.$.token}}
@@ -21,6 +22,37 @@ authorization:Bearer {{login.response.body.$.token}}
     "location": "New Location",
     "dateTime": "2026-09-21T12:00:00Z"
 }
+
+### 报名事件（成功返回 201 registered!）
+POST {{baseUrl}}/events/{{createEvent.response.body.$.event.ID}}/register
+authorization:Bearer {{login.response.body.$.token}}
+
+### 重复报名（应返回 409）
+POST {{baseUrl}}/events/{{createEvent.response.body.$.event.ID}}/register
+authorization:Bearer {{login.response.body.$.token}}
+
+### 通过事件id查报名用户（报名后应能看到自己的 email）
+GET {{baseUrl}}/events/{{createEvent.response.body.$.event.ID}}/attendees
+authorization:Bearer {{login.response.body.$.token}}
+
+### 报名检查（应返回上面报名的事件）
+GET {{baseUrl}}/registrations/me
+authorization:Bearer {{login.response.body.$.token}}
+
+### 取消报名
+DELETE {{baseUrl}}/events/{{createEvent.response.body.$.event.ID}}/register
+authorization:Bearer {{login.response.body.$.token}}
+
+### 取消后再查报名用户（应为空数组 []）
+GET {{baseUrl}}/events/{{createEvent.response.body.$.event.ID}}/attendees
+authorization:Bearer {{login.response.body.$.token}}
+
+### 取消后再做报名检查（应为空数组 []）
+GET {{baseUrl}}/registrations/me
+authorization:Bearer {{login.response.body.$.token}}
+
+### 未登录报名（应返回 401）
+POST {{baseUrl}}/events/1/register
 
 ### 更新事件
 PUT {{baseUrl}}/events/1
@@ -44,12 +76,4 @@ authorization:Bearer {{login.response.body.$.token}}
 
 ### 通过事件id查询单个事件
 GET {{baseUrl}}/events/1
-authorization:Bearer {{login.response.body.$.token}}
-
-### 通过用户查注册表
-GET {{baseUrl}}/events/:id/attendees
-authorization:Bearer {{login.response.body.$.token}}
-
-### 报名检查
-GET {{baseUrl}}/registrations/me
 authorization:Bearer {{login.response.body.$.token}}

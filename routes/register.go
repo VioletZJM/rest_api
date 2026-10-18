@@ -18,12 +18,13 @@ func registerForEvent(c *gin.Context) {
 		return
 	}
 
-	_, err = models.IsUserRegistered(eventId, userId)
-	if errors.Is(err, models.ErrAlreadyRegistered) {
-		c.JSON(http.StatusConflict, gin.H{"message": "User already registered for this event."})
-		return
-	} else if err != nil {
+	registered, err := models.IsUserRegistered(eventId, userId)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not register user for event."})
+		return
+	}
+	if registered {
+		c.JSON(http.StatusConflict, gin.H{"message": "User already registered for this event."})
 		return
 	}
 
@@ -34,7 +35,10 @@ func registerForEvent(c *gin.Context) {
 	}
 
 	err = event.Register(userId)
-	if err != nil {
+	if errors.Is(err, models.ErrAlreadyRegistered) {
+		c.JSON(http.StatusConflict, gin.H{"message": "User already registered for this event."})
+		return
+	} else if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not register user for event."})
 		return
 	}
