@@ -14,7 +14,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	database.InitDB()
+	err = database.InitDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 	server := gin.Default()
 	routes.RegisterRoutes(server)
 	server.Run(":8090") //localhost:8090
