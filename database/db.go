@@ -2,27 +2,32 @@ package database
 
 import (
 	"database/sql"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
 
-func InitDB() {
+func InitDB() error {
+	path := os.Getenv("DB_PATH")
+	if path == "" {
+		path = "api.db"
+	}
 	var err error
-	DB, err = sql.Open("sqlite3", "api.db")
+	DB, err = sql.Open("sqlite3", path)
 
 	if err != nil {
-		panic("Could not connect to database.")
+		return err
 	}
 
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
 
-	createTables()
+	return createTables()
 }
 
-func createTables() {
+func createTables() error {
 
 	createUserTable := `
 	CREATE TABLE IF NOT EXISTS users (
@@ -33,7 +38,7 @@ func createTables() {
 	`
 	_, err := DB.Exec(createUserTable)
 	if err != nil {
-		panic("Could not create users table." + err.Error())
+		return err
 	}
 
 	createEventTable := `
@@ -49,7 +54,7 @@ func createTables() {
 	`
 	_, err = DB.Exec(createEventTable)
 	if err != nil {
-		panic("Could not create events table." + err.Error())
+		return err
 	}
 
 	createRegistrationsTable := `
@@ -63,13 +68,15 @@ func createTables() {
 	`
 	_, err = DB.Exec(createRegistrationsTable)
 	if err != nil {
-		panic("Could not create registrations table." + err.Error())
+		return err
 	}
 
 	createUniqueIndex := `CREATE UNIQUE INDEX IF NOT EXISTS idx_registration_event_user ON registrations(event_id, user_id)`
 
 	_, err = DB.Exec(createUniqueIndex)
 	if err != nil {
-		panic("Could not create unique index." + err.Error())
+		return err
 	}
+
+	return nil
 }
