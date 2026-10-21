@@ -49,7 +49,10 @@ func cancelRegistration(c *gin.Context) {
 	event.ID = eventId
 
 	err = event.CancelRegistration(userId)
-	if err != nil {
+	if errors.Is(err, models.ErrRegistrationNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Registration not found."})
+		return
+	} else if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not cancel registration."})
 		return
 	}
