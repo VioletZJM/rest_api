@@ -16,7 +16,10 @@ type Event struct {
 	UserID      int64
 }
 
-var ErrAlreadyRegistered = errors.New("user already registered for this event")
+var (
+	ErrAlreadyRegistered    = errors.New("user already registered for this event")
+	ErrRegistrationNotFound = errors.New("registration not found")
+)
 
 func (e *Event) Save() error {
 	//稍后，保存到数据库中
@@ -143,8 +146,21 @@ func (e *Event) CancelRegistration(userId int64) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(e.ID, userId) //传id值给删除函数
-	return err
+	result, err := stmt.Exec(e.ID, userId) //传id值给删除函数
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrRegistrationNotFound
+	}
+
+	return nil
 }
 
 func GetRegistrationsForUser(userId int64) ([]Event, error) {
