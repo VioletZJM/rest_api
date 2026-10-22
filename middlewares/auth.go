@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"net/http"
 	"strings"
 
 	"example.com/rest_api/utils"
@@ -11,25 +10,25 @@ import (
 func Authenticate(c *gin.Context) {
 	token := c.Request.Header.Get("Authorization")
 	if token == "" {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		utils.Fail(c, 401, "unauthorized", "missing or invalid token")
 		return
 	}
 
 	authHeader, ok := strings.CutPrefix(token, "Bearer ")
 	if !ok {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		utils.Fail(c, 401, "unauthorized", "missing or invalid token")
 		return
 	}
 
 	token = strings.TrimSpace(authHeader)
 	if token == "" {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		utils.Fail(c, 401, "unauthorized", "missing or invalid token")
 		return
 	}
 
 	userId, err := utils.VerifyToken(token)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
+		utils.Fail(c, 401, "unauthorized", "missing or invalid token")
 		return
 	}
 
