@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 
 	"example.com/rest_api/models"
+	"example.com/rest_api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,22 +14,19 @@ func registerForEvent(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get event_id."})
+		utils.Fail(c, http.StatusBadRequest, "INVALID_EVENT_ID", "invalid event id")
 		return
 	}
 
 	event, err := models.GetEventByID(eventId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch event."})
+		failWith(c, err)
 		return
 	}
 
 	err = event.Register(userId)
-	if errors.Is(err, models.ErrAlreadyRegistered) {
-		c.JSON(http.StatusConflict, gin.H{"message": "User already registered for this event."})
-		return
-	} else if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not register user for event."})
+	if err != nil {
+		failWith(c, err)
 		return
 	}
 
@@ -41,7 +38,7 @@ func cancelRegistration(c *gin.Context) {
 	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not get event_id."})
+		utils.Fail(c, http.StatusBadRequest, "INVALID_EVENT_ID", "invalid event id")
 		return
 	}
 
@@ -49,11 +46,8 @@ func cancelRegistration(c *gin.Context) {
 	event.ID = eventId
 
 	err = event.CancelRegistration(userId)
-	if errors.Is(err, models.ErrRegistrationNotFound) {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Registration not found."})
-		return
-	} else if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not cancel registration."})
+	if err != nil {
+		failWith(c, err)
 		return
 	}
 
