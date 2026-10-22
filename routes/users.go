@@ -13,13 +13,13 @@ func signup(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		utils.Fail(c, http.StatusBadRequest, "INVALID_REQUEST_BODY", "invalid request body")
 		return
 	}
 
 	err = user.Save()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not save user."})
+		failWith(c, err)
 		return
 	}
 
@@ -32,19 +32,19 @@ func login(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		utils.Fail(c, http.StatusBadRequest, "INVALID_REQUEST_BODY", "invalid request body")
 		return
 	}
 
 	err = user.ValidateCredentials()
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authenticate user"})
+		failWith(c, err)
 		return
 	}
 
 	token, err := utils.GenerateToken(user.Email, user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not authenticate user"})
+		failWith(c, err)
 		return
 	}
 
