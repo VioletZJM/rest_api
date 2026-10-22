@@ -35,7 +35,7 @@ func newTestServer(t *testing.T) *gin.Engine {
 	if err := utils.LoadJWTSecret(); err != nil {
 		t.Fatal(err)
 	}
-	if err := database.InitDB(); err != nil {
+	if err := database.InitDB(filepath.Join(t.TempDir(), "test.db")); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = database.DB.Close() })
