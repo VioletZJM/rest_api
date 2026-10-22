@@ -7,6 +7,8 @@ import (
 	"example.com/rest_api/utils"
 )
 
+var ErrInvalidCredentials = errors.New("invalid credentials")
+
 type User struct {
 	ID       int64
 	Email    string `binding:"required"`
@@ -48,12 +50,12 @@ func (u *User) ValidateCredentials() error {
 
 	err := row.Scan(&u.ID, &retrievedPassword)
 	if err != nil {
-		return errors.New("Credentials invalid")
+		return ErrInvalidCredentials
 	}
 
 	passwordIsValid := utils.CheckPasswordHash(u.Password, retrievedPassword)
 	if !passwordIsValid {
-		return errors.New("Credentials invalid")
+		return ErrInvalidCredentials
 	}
 
 	return nil
