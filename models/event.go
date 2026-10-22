@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -19,6 +20,7 @@ type Event struct {
 var (
 	ErrAlreadyRegistered    = errors.New("user already registered for this event")
 	ErrRegistrationNotFound = errors.New("registration not found")
+	ErrNotFound             = errors.New("resource not found")
 )
 
 func (e *Event) Save() error {
@@ -76,7 +78,9 @@ func GetEventByID(id int64) (*Event, error) {
 
 	var event Event
 	err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
-	if err != nil {
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, ErrNotFound
+	} else if err != nil {
 		return nil, err
 	}
 
