@@ -2,18 +2,14 @@ package database
 
 import (
 	"database/sql"
-	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
 
-func InitDB() error {
-	path := os.Getenv("DB_PATH")
-	if path == "" {
-		path = "api.db"
-	}
+func InitDB(path string) error {
+
 	var err error
 	DB, err = sql.Open("sqlite3", path)
 
