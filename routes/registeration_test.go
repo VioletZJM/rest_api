@@ -80,5 +80,5 @@ func TestUpdateEventNotOwner(t *testing.T) {
 	eventID := createTestEvent(t, e, tokenA)
 
 	rec := doTest(t, e, "PUT", eventPath(eventID, ""), tokenB, `{"name":"Updated Title"}`)
-	assertStatusCode(t, rec, 401)
+	assertStatusCode(t, rec, 403)
 }
