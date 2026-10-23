@@ -99,8 +99,8 @@ curl -X POST localhost:8090/events -H "Authorization: Bearer $TOKEN" \
 | 状态码 | code | 场景 |
 |---|---|---|
 | 400 | `INVALID_REQUEST_BODY` / `INVALID_EVENT_ID` | 请求体不合法 / 路径 id 非数字 |
-| 401 | `unauthorized` / `INVALID_CREDENTIALS` | 缺少或无效 token / 邮箱或密码错误 |
-| 403 | `forbidden` | 非事件创建者执行修改或删除 |
+| 401 | `UNAUTHORIZED` / `INVALID_CREDENTIALS` | 缺少或无效 token / 邮箱或密码错误 |
+| 403 | `FORBIDDEN` | 非事件创建者执行修改或删除 |
 | 404 | `NOT_FOUND` / `REGISTRATION_NOT_FOUND` | 事件不存在 / 未报名却取消报名 |
 | 409 | `ALREADY_REGISTERED` | 重复报名同一活动 |
 | 500 | `INTERNAL_SERVER_ERROR` | 其他服务端错误（详情只写日志） |
