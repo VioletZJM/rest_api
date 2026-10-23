@@ -1,0 +1,16 @@
+services:
+   api:
+     build: .
+     ports:
+       - "8090:8090"
+     environment:
+       JWT_SECRET: ${JWT_SECRET:helloworld}
+       DB_PATH: /data/api.db
+       PORT: "8090"
+     volumes:
+       - api-data:/data
+     restart: unless-stopped
+     stop_grace_period: 10s
+
+volumes:
+   api-data:
