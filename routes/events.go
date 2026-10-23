@@ -96,7 +96,7 @@ func updateEvent(c *gin.Context) {
 	}
 
 	if event.UserID != userId {
-		utils.Fail(c, http.StatusForbidden, "forbidden", "not the owner of this event")
+		utils.Fail(c, http.StatusForbidden, "FORBIDDEN", "not the owner of this event")
 		return
 	}
 
@@ -134,7 +134,7 @@ func deleteEvent(c *gin.Context) {
 	}
 
 	if event.UserID != userId {
-		utils.Fail(c, http.StatusForbidden, "forbidden", "not the owner of this event")
+		utils.Fail(c, http.StatusForbidden, "FORBIDDEN", "not the owner of this event")
 		return
 	}
 
