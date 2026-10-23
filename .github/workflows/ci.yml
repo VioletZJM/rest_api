@@ -18,7 +18,29 @@ jobs:
       - name: Vet
         run: go vet ./...
       - name: Test
-        run: go test -count=1 -cover ./...
+        run: |
+            set -o pipefail
+            go test -count=1 -coverprofile=cover.out ./... | tee test.log
         env:
-          JWT_SECRET: ci-test-secret
-          CGO_ENABLED: "1"
+            JWT_SECRET: ci-test-secret
+            CGO_ENABLED: "1"
+      - name: Coverage summary
+        run: |
+           routes=$(grep 'rest_api/routes' test.log | grep -o 'coverage: [0-9.]*%' | cut -d'' -f2)
+           total=$(go tool cover -func=cover.out | tail -1 | awk '{print $NF}')
+           {
+             echo "### 测试覆盖率"
+             echo ""
+             echo "| 范围 | 覆盖率 |"
+             echo "|---|---|"
+             echo "| 路由层(handler / 中间件) | $routes |"
+             echo "| 全仓库（含无测试的包） | $total |"
+           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+            name: coverage
+            path: cover.out
+            retention-days: 7
+        
+      
