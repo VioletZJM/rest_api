@@ -9,13 +9,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type eventListresponse struct {
+	Total int            `json:"total"`
+	Page  int            `json:"page"`
+	Limit int            `json:"limit"`
+	Items []models.Event `json:"Items"`
+}
+
 func getEvents(c *gin.Context) {
-	events, err := models.GetAllEvents()
+	page, limit := parsePagination(c)
+	offset := (page - 1) * limit
+
+	events, err := models.GetEvents(limit, offset)
 	if err != nil {
 		failWith(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, events)
+
+	total, err := models.CountEvents()
+	if err != nil {
+		failWith(c, err)
+		return
+	}
+
+	response := eventListresponse{
+		Total: total,
+		Page:  page,
+		Limit: limit,
+		Items: events,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func createEvent(c *gin.Context) {
