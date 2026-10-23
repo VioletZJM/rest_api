@@ -26,7 +26,7 @@ jobs:
             CGO_ENABLED: "1"
       - name: Coverage summary
         run: |
-           routes=$(grep 'rest_api/routes' test.log | grep -o 'coverage: [0-9.]*%' | cut -d'' -f2)
+           routes=$(sed -n 's#.*rest_api/routes.*coverage: \([0-9.]*%\).*#\1#p' test.log)
            total=$(go tool cover -func=cover.out | tail -1 | awk '{print $NF}')
            {
              echo "### 测试覆盖率"
