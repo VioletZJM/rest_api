@@ -43,9 +43,12 @@ func (e *Event) Save() error {
 	return err
 }
 
-func GetAllEvents() ([]Event, error) {
-	query := "SELECT * FROM events"
-	rows, err := database.DB.Query(query)
+func GetEvents(limit, offset int) ([]Event, error) {
+	query := `SELECT id,name,description,location,dateTime,user_id FROM events
+	ORDER BY id DESC
+	LIMIT ? OFFSET ?`
+
+	rows, err := database.DB.Query(query, limit, offset)
 
 	if err != nil {
 		return nil, err
@@ -70,6 +73,18 @@ func GetAllEvents() ([]Event, error) {
 		return nil, err
 	}
 	return events, nil
+}
+
+func CountEvents() (int, error) {
+	query := "SELECT COUNT(*) FROM events"
+	row := database.DB.QueryRow(query)
+
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func GetEventByID(id int64) (*Event, error) {
@@ -189,12 +204,8 @@ func GetRegistrationsForUser(userId int64) ([]Event, error) {
 			return nil, err
 		}
 		events = append(events, event)
-	} //一行一行查下来，直到为NULL
+	}
 
-	// rows.Err() 和上面 err != nil 检查的不是同一个错误来源：
-	// Query 的 err 检查的是"执行查询/建立连接"阶段的错误，必须在循环前判断；
-	// rows.Err() 检查的是"遍历 rows 内部"（Next）阶段可能发生的错误，
-	// 只能放在循环结束后判断，否则永远拿不到它。二者不重复，都要保留。
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
